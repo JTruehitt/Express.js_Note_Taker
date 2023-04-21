@@ -1,20 +1,20 @@
 const express = require('express')
 const router = express.Router()
+const path = require('path')
 
 // setting up base middleware
 router.use((req, res, next) => {
-    console.log('yay for middleware')
+    console.log('HTML router accessed.')
     next()
 })
 
-// landing page route
+// main page
 router.get('/', (req, res) => {
-    res.render('./public/index.html')
+    res.sendFile(path.join(__dirname, '../public', 'index.html'))
 })
-
-// notes route
+// /notes page
 router.get('/notes', (req, res) => {
-    res.render('./public/notes.html')
+    res.sendFile(path.join(__dirname, '../public', 'notes.html'))
 })
 
 module.exports = router
