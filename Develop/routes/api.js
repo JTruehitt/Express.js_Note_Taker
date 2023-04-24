@@ -10,14 +10,14 @@ router.use((req, res, next) => {
 
 // main /api page
 router.get("/", (req, res) => {
-  res.send(console.log("yay"));
+  res.end();
 });
 
 // api/notes page
 router.get("/notes", (req, res) => {
   fs.readFile(path.join(__dirname, "../db", "db.json"), "utf8", (err, data) => {
     if (err) {
-      console.log(err);
+      console.log("Error: ", err);
       return res.status(500).send("error loading saved notes");
     }
     res.send(data);
@@ -27,7 +27,7 @@ router.get("/notes", (req, res) => {
 router.post("/notes", (req, res) => {
   fs.readFile(path.join(__dirname, "../db", "db.json"), "utf8", (err, data) => {
     if (err) {
-      console.log(err);
+      console.log("Error: ", err);
       return res.status(500).send("error loading saved notes");
     }
 
@@ -41,41 +41,43 @@ router.post("/notes", (req, res) => {
       title: req.body.title,
       text: req.body.text,
     };
-    console.log("new note: ", newNote);
-    console.log("req body: ", req.body);
+
     db.push(newNote);
     fs.writeFile(
       path.join(__dirname, "../db", "db.json"),
       JSON.stringify(db),
-      (err) => console.error(err)
+      (err) => {
+        if (err) return console.log("Error: ", err);
+      }
     );
     res.send(console.log("Note saved"));
   });
 });
 
 router.delete(`/notes/:id`, (req, res) => {
-  console.log('hello')
   fs.readFile(path.join(__dirname, "../db", "db.json"), "utf8", (err, data) => {
-    if (err) res.status(500).send("error loading saved notes");
+    if (err) res.status(500).send(console.log("error loading saved notes"));
 
     let db = [];
     if (data) db = JSON.parse(data);
-    console.log(db)
 
     const { id } = req.params;
-    db.forEach(note => {
+    db.forEach((note) => {
       if (note.id === id) {
-        let index = db.indexOf(note)
-        db.splice(index, 1)
+        let index = db.indexOf(note);
+        db.splice(index, 1);
+        console.log("removed the following note", note);
       }
-  })
+    });
 
-  fs.writeFile(
-    path.join(__dirname, "../db", "db.json"),
-    JSON.stringify(db),
-    (err) => console.error(err)
-  );
-  res.send(console.log("Note deleted"));
+    fs.writeFile(
+      path.join(__dirname, "../db", "db.json"),
+      JSON.stringify(db),
+      (err) => {
+        if (err) return console.error("Error: HERE", err);
+      }
+    );
+    res.send(console.log("Note deleted"));
   });
 });
 
