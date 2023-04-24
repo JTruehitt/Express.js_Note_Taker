@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000
 const htmlRouter = require('./routes/html')
 const apiRouter = require('./routes/api')
 
-
+app.use(express.json())
 app.use(express.urlencoded({ extended: false}))
 app.use('/', htmlRouter);
 app.use('/api', apiRouter)
