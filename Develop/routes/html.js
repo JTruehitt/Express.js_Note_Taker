@@ -4,7 +4,6 @@ const path = require('path')
 
 // setting up base middleware
 router.use((req, res, next) => {
-    console.log('HTML router accessed.')
     next()
 })
 
