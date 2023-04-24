@@ -54,15 +54,28 @@ router.post("/notes", (req, res) => {
 });
 
 router.delete(`/notes/:id`, (req, res) => {
+  console.log('hello')
   fs.readFile(path.join(__dirname, "../db", "db.json"), "utf8", (err, data) => {
     if (err) res.status(500).send("error loading saved notes");
 
     let db = [];
     if (data) db = JSON.parse(data);
+    console.log(db)
 
     const { id } = req.params;
-    console.log(id);
-    data.filter((note) => note.id == id);
+    db.forEach(note => {
+      if (note.id === id) {
+        let index = db.indexOf(note)
+        db.splice(index, 1)
+      }
+  })
+
+  fs.writeFile(
+    path.join(__dirname, "../db", "db.json"),
+    JSON.stringify(db),
+    (err) => console.error(err)
+  );
+  res.send(console.log("Note deleted"));
   });
 });
 
