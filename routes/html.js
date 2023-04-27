@@ -13,7 +13,7 @@ router.get("/notes", (req, res) => {
 });
 
 // catch all route
-router.get("/", (req, res) => {
+router.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
 
